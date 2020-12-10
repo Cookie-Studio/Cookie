@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: com.nukkitx.protocol:bedrock-v291:2.6.1-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/nukkitx/protocol/bedrock-v291/2.6.1-SNAPSHOT/bedrock-v291-2.6.1-20201126.135817-1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/nukkitx/protocol/bedrock-v291/2.6.1-SNAPSHOT/bedrock-v291-2.6.1-20201208.212918-2.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/nukkitx/protocol/bedrock-v291/2.6.1-SNAPSHOT/bedrock-v291-2.6.1-20201126.135817-1-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/nukkitx/protocol/bedrock-v291/2.6.1-SNAPSHOT/bedrock-v291-2.6.1-20201208.212918-2-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/nukkitx/protocol/bedrock-v291/2.6.1-SNAPSHOT/bedrock-v291-2.6.1-20201126.135817-1-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/nukkitx/protocol/bedrock-v291/2.6.1-SNAPSHOT/bedrock-v291-2.6.1-20201208.212918-2-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
