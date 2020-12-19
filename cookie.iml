@@ -11,6 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: com.nukkitx.protocol:bedrock-v422:2.6.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.nukkitx.protocol:bedrock-v419:2.6.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.nukkitx.protocol:bedrock-v408:2.6.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.nukkitx.protocol:bedrock-v407:2.6.1-SNAPSHOT" level="project" />
@@ -54,5 +55,7 @@
     <orderEntry type="library" name="Maven: com.nukkitx.fastutil:fastutil-long-sets:8.3.1" level="project" />
     <orderEntry type="library" name="Maven: com.nukkitx.fastutil:fastutil-object-sets:8.3.1" level="project" />
     <orderEntry type="library" name="Maven: com.nukkitx.fastutil:fastutil-object-common:8.3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.iq80.leveldb:leveldb:0.11-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.iq80.leveldb:leveldb-api:0.11-SNAPSHOT" level="project" />
   </component>
 </module>
