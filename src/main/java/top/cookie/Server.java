@@ -16,10 +16,11 @@ import java.nio.file.Paths;
  */
 public class Server {
 
-    static InetSocketAddress bindAddress = null;
-    static Path serverPath = Paths.get(System.getProperty("user.dir"));
-    static BedrockServer server = null;
-    static BedrockPong pong = new BedrockPong();
+    private static InetSocketAddress bindAddress = null;
+    private static Path serverPath = Paths.get(System.getProperty("user.dir"));
+    private static BedrockServer server = null;
+    private static BedrockPong pong = new BedrockPong();
+    private static int serverTick = 20;
 
     public static void main(String[] args){
         System.out.println("Server starting...");
@@ -52,5 +53,9 @@ public class Server {
 
         System.out.println("Server start!");
         server.bind().join();
+    }
+
+    synchronized static int getServerTick(){
+        return serverTick;
     }
 }
