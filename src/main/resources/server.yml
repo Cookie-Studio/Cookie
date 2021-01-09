@@ -1,0 +1,7 @@
+ip: 127.0.0.1
+port: 19132
+servertick: 20
+motd: Cookie server
+# survive,creative,adventure or looker
+gamemode: survive
+maxplayercount: 20
