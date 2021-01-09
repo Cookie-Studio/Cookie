@@ -1,2 +1,13 @@
 # Cookie
-什么是Cookie? Cookie是MCBE的一款高性能服务端，使用Java编写，支持全部特性，并且支持加载插件。 Cookie拥有完善的，易上手的插件api，总体借鉴了nk的架构，并在此基础上做了大量修改。 此项目还在开发中（Under developing），欢迎有能力的开发者加入我们的开发组（目前几乎全部由我进行开发）我们希望能通过这个项目，复兴国内BE版生态圈
+What is Cookie? Cookie is a high-performance server of MCBE, written in Java, supports all features, and supports loading plug-ins. Cookie has a complete and easy-to-use plug-in api, which generally draws on the architecture of nk, and has made a lot of changes on this basis. This project is still under development. We welcome capable developers to join our development team (currently almost all of them are developed by me). We hope that through this project, we can revive the domestic bedrock version of the ecosystem.
+# Design goals
+1.All original features.
+2.Support original world format and can summon original terrain.
+3.Plugin is able to add new blocks, creatures, items, and synthesis tables (transfer Add-On api).
+4.Easy for developer writing plugins.
+# How to start?
+Just need to copy the jar file into a folder and run java -jar {corename}.jar.
+# About plugin developing document?
+We are still designing the core api, and we will write the developing document after finish the api as soon as possible.
+# I want to join the developing group,how to join?
+We welcome developer join our group.If you want to join our group,please add the QQ group: 107533634.

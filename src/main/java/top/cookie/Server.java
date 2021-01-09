@@ -49,6 +49,7 @@ public class Server {
         server.bind().join();
         System.out.println("Starting TickScheduler...");
         ticker = new Thread(new ServerTicker());
+        ticker.start();
         System.out.println("TickScheduler Started!");
         System.out.println("Server started!");
     }
