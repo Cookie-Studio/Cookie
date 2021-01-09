@@ -9,6 +9,7 @@ import top.cookie.network.SimpleBedrockPacketHandler;
 import top.cookie.util.yml.Yml;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,13 +27,13 @@ public class Server {
     private static int serverTick = 20;
     private static ArrayList<Player> players = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException, URISyntaxException {
         System.out.println("Server starting...");
         Path ymlPath = Paths.get(serverPath.toString(), "server.yml");
-        Yml serverSets = new Yml(ymlPath);
         if (!Files.exists(ymlPath)){
-            Files.write(ymlPath,Files.readAllBytes(Paths.get(Server.class.getClassLoader().getResource("server.yml").toString())));
+            Files.copy(Server.class.getClassLoader().getResourceAsStream("server.yml"),ymlPath);
         }
+        Yml serverSets = new Yml(ymlPath);
         bindAddress = new InetSocketAddress(serverSets.<String>get("ip"), serverSets.<Integer>get("port"));
         server =  new BedrockServer(bindAddress);
         pong.setEdition("MCPE");
@@ -60,7 +61,7 @@ public class Server {
             }
         });
         server.bind().join();
-        System.out.println("Server start!");
+        System.out.println("Server started!");
     }
 
     static int getServerTick(){

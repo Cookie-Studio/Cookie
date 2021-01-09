@@ -55,7 +55,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.xxg.Main</mainClass>
+                            <mainClass>top.cookie.Server</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
