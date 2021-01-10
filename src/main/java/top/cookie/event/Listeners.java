@@ -1,30 +1,29 @@
 package top.cookie.event;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Listeners {
-    private static final Map<Integer,ArrayList<ListenerMethod>> methodmap = new HashMap<>();
+    private static final Map<Integer,ArrayList<ListenerMethod>> methodMap = new HashMap<>();
     static{
-        methodmap.put(PriorityType.LOWEST,new ArrayList<>());
-        methodmap.put(PriorityType.LOWER,new ArrayList<>());
-        methodmap.put(PriorityType.LOW,new ArrayList<>());
-        methodmap.put(PriorityType.MEDIUMLOW,new ArrayList<>());
-        methodmap.put(PriorityType.MEDIUM,new ArrayList<>());
-        methodmap.put(PriorityType.MEDIUMHIGH,new ArrayList<>());
-        methodmap.put(PriorityType.HIGH,new ArrayList<>());
-        methodmap.put(PriorityType.HIGHER,new ArrayList<>());
-        methodmap.put(PriorityType.HIGHEST,new ArrayList<>());
+        methodMap.put(PriorityType.LOWEST,new ArrayList<>());
+        methodMap.put(PriorityType.LOWER,new ArrayList<>());
+        methodMap.put(PriorityType.LOW,new ArrayList<>());
+        methodMap.put(PriorityType.MEDIUMLOW,new ArrayList<>());
+        methodMap.put(PriorityType.MEDIUM,new ArrayList<>());
+        methodMap.put(PriorityType.MEDIUMHIGH,new ArrayList<>());
+        methodMap.put(PriorityType.HIGH,new ArrayList<>());
+        methodMap.put(PriorityType.HIGHER,new ArrayList<>());
+        methodMap.put(PriorityType.HIGHEST,new ArrayList<>());
     }
     public static void registerListener(Class<Listener> listener){
         for(Method method : listener.getMethods()){
             if (!method.isAnnotationPresent(EventHandler.class)){
                 continue;
             }
-            methodmap.get(method.getAnnotation(EventHandler.class).priority()).add(new ListenerMethod(method));
+            methodMap.get(method.getAnnotation(EventHandler.class).priority()).add(new ListenerMethod(method));
         }
     }
     public static void callAllListener(Event event){
