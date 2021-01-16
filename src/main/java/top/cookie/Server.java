@@ -26,16 +26,16 @@ public class Server {
     private Map<UUID,Player> players = new HashMap<>();
     private Thread tickScheduler;
     private int protocolVersion = Bedrock_v422.V422_CODEC.getProtocolVersion();
-    private static Server cookieServer = new Server();
+    private static Server cookieServer;
     private Yml serverSets;
 
     private Server(){
         System.out.println("Server starting...");
-        cookieServer.loadServerYml();
-        initServerInfo();
-        setHandlers();
-        startTickScheduler();
-        cookieServer.BedrockServer.bind().join();
+        this.loadServerYml();
+        this.initServerInfo();
+        this.setHandlers();
+        this.startTickScheduler();
+        this.BedrockServer.bind().join();
         System.out.println("Server started!");
     }
 
