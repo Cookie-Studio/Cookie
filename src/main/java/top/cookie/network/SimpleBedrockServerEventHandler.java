@@ -16,13 +16,13 @@ public class SimpleBedrockServerEventHandler implements BedrockServerEventHandle
 
     @Override
     public BedrockPong onQuery(InetSocketAddress inetSocketAddress) {
-        return Server.getPong();
+        return Server.getInstance().getPong();
     }
 
     @Override
     public void onSessionCreation(BedrockServerSession bedrockServerSession) {
         bedrockServerSession.addDisconnectHandler((reason) -> {
-            System.out.println(bedrockServerSession.getAddress() + "disconnect. Reason: " + reason.name());
+            System.out.println(bedrockServerSession.getAddress() + " disconnect. Reason: " + reason.name());
         });
         bedrockServerSession.setPacketHandler(new SimpleBedrockPacketHandler(bedrockServerSession));
     }
