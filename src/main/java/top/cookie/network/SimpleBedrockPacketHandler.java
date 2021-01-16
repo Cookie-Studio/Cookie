@@ -1,9 +1,18 @@
 package top.cookie.network;
 
+import com.nukkitx.network.util.DisconnectReason;
+import com.nukkitx.protocol.bedrock.BedrockServerSession;
 import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler;
 import com.nukkitx.protocol.bedrock.packet.*;
+import top.cookie.Player;
+import top.cookie.Server;
 
 public class SimpleBedrockPacketHandler implements BedrockPacketHandler {
+    private BedrockServerSession session;
+    private Player player;
+    public SimpleBedrockPacketHandler(BedrockServerSession session){
+        this.session = session;
+    }
     @Override
     public boolean handle(AdventureSettingsPacket packet) {
         return false;
@@ -171,7 +180,11 @@ public class SimpleBedrockPacketHandler implements BedrockPacketHandler {
 
     @Override
     public boolean handle(LoginPacket packet) {
-        return false;
+        if (packet.getProtocolVersion() != Server.getServerProtocolVersion()){
+            this.session.disconnect(DisconnectReason.INCOMPATIBLE_PROTOCOL_VERSION.name());
+        }
+        System.out.println(this.session.getAddress() + " logined");
+        return true;
     }
 
     @Override
@@ -321,7 +334,11 @@ public class SimpleBedrockPacketHandler implements BedrockPacketHandler {
 
     @Override
     public boolean handle(AddPlayerPacket packet) {
-        return false;
+        Player player = new Player(packet,this.session);
+        this.player = player;
+        Server.getPlayers().put(packet.getUuid(),player);
+        System.out.println(this.player.getPlayerName() + " joined");
+        return true;
     }
 
     @Override
@@ -381,7 +398,9 @@ public class SimpleBedrockPacketHandler implements BedrockPacketHandler {
 
     @Override
     public boolean handle(DisconnectPacket packet) {
-        return false;
+        Server.getPlayers().remove(this.player.getUuid());
+        System.out.println(this.player.getPlayerName() + "disconnected");
+        return true;
     }
 
     @Override

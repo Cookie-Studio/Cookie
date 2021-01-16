@@ -1,5 +1,6 @@
 ip: 127.0.0.1
 port: 19132
+#please do not change it if needn't;
 servertick: 20
 motd: Cookie server
 # survive,creative,adventure or looker

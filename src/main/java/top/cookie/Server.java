@@ -12,8 +12,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Cookie服务端类&启动类
@@ -25,8 +24,9 @@ public class Server {
     private static BedrockServer server = null;
     private static BedrockPong pong = new BedrockPong();
     private static int serverTick = 20;
-    private static ArrayList<Player> players = new ArrayList<>();
+    private static Map<UUID,Player> players = new HashMap<>();
     private static Thread ticker;
+    private static int protocolVersion = Bedrock_v422.V422_CODEC.getProtocolVersion();
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         System.out.println("Server starting...");
@@ -62,11 +62,15 @@ public class Server {
         return pong;
     }
 
-    public static List<Player> getPlayers(){
+    public static Map<UUID,Player> getPlayers(){
         return players;
     }
 
     public static Path getServerRunningPath(){
         return serverPath;
+    }
+
+    public static int getServerProtocolVersion(){
+        return protocolVersion;
     }
 }
