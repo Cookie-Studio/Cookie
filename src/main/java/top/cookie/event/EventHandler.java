@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EventHandler {
     int priority() default PriorityType.MEDIUM;
-    boolean ifIgnoreCanceled() default false;
+    boolean IgnoreCanceled() default false;
 }
 
 interface PriorityType{

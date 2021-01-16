@@ -36,7 +36,7 @@ public class Listeners {
         public ListenerMethod(Method method){
             EventHandler annotation = method.getAnnotation(EventHandler.class);
             this.method = method;
-            this.isIgnoreCanceled = annotation.ifIgnoreCanceled();
+            this.isIgnoreCanceled = annotation.IgnoreCanceled();
             this.priority = annotation.priority();
         }
     }

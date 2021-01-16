@@ -8,7 +8,6 @@ import top.cookie.scheduler.ServerTicker;
 import top.cookie.util.yml.Yml;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,58 +18,80 @@ import java.util.*;
  */
 public class Server {
 
-    private static InetSocketAddress bindAddress = null;
-    private static Path serverPath = Paths.get(System.getProperty("user.dir"));
-    private static BedrockServer server = null;
-    private static BedrockPong pong = new BedrockPong();
-    private static int serverTick = 20;
-    private static Map<UUID,Player> players = new HashMap<>();
-    private static Thread ticker;
-    private static int protocolVersion = Bedrock_v422.V422_CODEC.getProtocolVersion();
+    private InetSocketAddress bindAddress = null;
+    private Path serverPath = Paths.get(System.getProperty("user.dir"));
+    private BedrockServer BedrockServer = null;
+    private BedrockPong pong = new BedrockPong();
+    private int serverTick = 20;
+    private Map<UUID,Player> players = new HashMap<>();
+    private Thread tickScheduler;
+    private int protocolVersion = Bedrock_v422.V422_CODEC.getProtocolVersion();
+    private static Server cookieServer = new Server();
+    private Yml serverSets;
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    private Server(){
         System.out.println("Server starting...");
-        System.out.println("Load server.yml...");
-        Path ymlPath = Paths.get(serverPath.toString(), "server.yml");
-        if (!Files.exists(ymlPath)){
-            Files.copy(Server.class.getClassLoader().getResourceAsStream("server.yml"),ymlPath);
-        }
-        Yml serverSets = new Yml(ymlPath);
-        System.out.println("server.yml loaded!");
-        bindAddress = new InetSocketAddress(serverSets.<String>get("ip"), serverSets.<Integer>get("port"));
-        server =  new BedrockServer(bindAddress);
-        pong.setEdition("MCPE");
-        pong.setMotd(serverSets.get("motd"));
-        pong.setPlayerCount(0);
-        pong.setMaximumPlayerCount(serverSets.get("maxplayercount"));
-        pong.setGameType(serverSets.get("gamemode"));
-        pong.setProtocolVersion(Bedrock_v422.V422_CODEC.getProtocolVersion());
-        server.setHandler(new SimpleBedrockServerEventHandler());
-        server.bind().join();
-        System.out.println("Starting TickScheduler...");
-        ticker = new Thread(new ServerTicker());
-        ticker.start();
-        System.out.println("TickScheduler Started!");
+        cookieServer.loadServerYml();
+        cookieServer.bindAddress = new InetSocketAddress(serverSets.<String>get("ip"), serverSets.<Integer>get("port"));
+        cookieServer.BedrockServer = new BedrockServer(cookieServer.bindAddress);
+        cookieServer.pong.setMotd(serverSets.get("motd"));
+        cookieServer.pong.setMaximumPlayerCount(serverSets.get("maxplayercount"));
+        cookieServer.pong.setGameType(serverSets.get("gamemode"));
+        cookieServer.pong.setEdition("MCPE");
+        cookieServer.pong.setPlayerCount(0);
+        cookieServer.pong.setProtocolVersion(Bedrock_v422.V422_CODEC.getProtocolVersion());
+        cookieServer.BedrockServer.setHandler(new SimpleBedrockServerEventHandler());
+        cookieServer.BedrockServer.bind().join();
+        startTickScheduler();
         System.out.println("Server started!");
     }
 
-    public static int getServerTick(){
-        return serverTick;
+    public static void main(String[] args){
+        cookieServer = new Server();
     }
 
-    public static BedrockPong getPong(){
-        return pong;
+    public int getServerTick(){
+        return this.serverTick;
     }
 
-    public static Map<UUID,Player> getPlayers(){
-        return players;
+    public BedrockPong getPong(){
+        return this.pong;
     }
 
-    public static Path getServerRunningPath(){
-        return serverPath;
+    public Map<UUID,Player> getPlayers(){
+        return this.players;
     }
 
-    public static int getServerProtocolVersion(){
-        return protocolVersion;
+    public Path getServerRunningPath(){
+        return this.serverPath;
+    }
+
+    public int getServerProtocolVersion(){
+        return this.protocolVersion;
+    }
+
+    public static Server getInstance(){
+        return cookieServer;
+    }
+
+    private void loadServerYml(){
+        System.out.println("Load server.yml...");
+        Path ymlPath = Paths.get(cookieServer.serverPath.toString(), "server.yml");
+        if (!Files.exists(ymlPath)){
+            try {
+                Files.copy(Server.class.getClassLoader().getResourceAsStream("server.yml"),ymlPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        serverSets = new Yml(ymlPath);
+        System.out.println("server.yml loaded!");
+    }
+
+    private void startTickScheduler(){
+        System.out.println("Starting TickScheduler...");
+        cookieServer.tickScheduler = new Thread(new ServerTicker());
+        cookieServer.tickScheduler.start();
+        System.out.println("TickScheduler Started!");
     }
 }

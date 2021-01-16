@@ -9,7 +9,7 @@ public class ServerTicker implements Runnable{
         while(!Thread.interrupted()){
             SchedulerActions.callAllAction();
             try {
-                TimeUnit.MILLISECONDS.sleep(1000 * (1 / Server.getServerTick()));
+                TimeUnit.MILLISECONDS.sleep(1000 * (1 / Server.getInstance().getServerTick()));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
