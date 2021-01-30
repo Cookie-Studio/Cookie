@@ -1,10 +1,14 @@
 package top.cookie;
 
+import com.nukkitx.protocol.bedrock.BedrockPacketCodec;
 import com.nukkitx.protocol.bedrock.BedrockPong;
 import com.nukkitx.protocol.bedrock.BedrockServer;
 import com.nukkitx.protocol.bedrock.v422.Bedrock_v422;
-import top.cookie.network.SimpleBedrockServerEventHandler;
-import top.cookie.scheduler.ServerTicker;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import top.cookie.event.listener.ListenerManager;
+import top.cookie.network.CookieServerEventHandler;
+import top.cookie.scheduler.servertick.ServerTicker;
 import top.cookie.util.yml.Yml;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -25,22 +29,29 @@ public class Server {
     private int serverTick = 20;
     private Map<UUID,Player> players = new HashMap<>();
     private Thread tickScheduler;
-    private int protocolVersion = Bedrock_v422.V422_CODEC.getProtocolVersion();
+    private final BedrockPacketCodec serverPacketCodec = Bedrock_v422.V422_CODEC;
     private static Server cookieServer;
     private Yml serverSets;
+    private ListenerManager listenerManager = new ListenerManager();
+    private Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
     private Server(){
-        System.out.println("Server starting...");
+        logger.info("Server starting...");
+        Server.cookieServer = this;
         this.loadServerYml();
         this.initServerInfo();
         this.setHandlers();
         this.startTickScheduler();
         this.BedrockServer.bind().join();
-        System.out.println("Server started!");
+        logger.info("Server started!");
     }
 
     public static void main(String[] args){
         cookieServer = new Server();
+    }
+
+    public static Server getInstance(){
+        return cookieServer;
     }
 
     public int getServerTick(){
@@ -59,47 +70,69 @@ public class Server {
         return this.serverPath;
     }
 
-    public int getServerProtocolVersion(){
-        return this.protocolVersion;
+    public BedrockPacketCodec getServerPacketCodec(){
+        return this.serverPacketCodec;
     }
 
-    public static Server getInstance(){
-        return cookieServer;
+    public Yml getServerSets() {
+        return serverSets;
+    }
+
+    public ListenerManager getListenerManager(){
+        return this.listenerManager;
+    }
+
+    public Logger getLogger(){
+        return logger;
     }
 
     private void loadServerYml(){
-        System.out.println("Load server.yml...");
-        Path ymlPath = Paths.get(cookieServer.serverPath.toString(), "server.yml");
+        logger.info("Loading server.yml...");
+        Path ymlPath = Paths.get(this.serverPath.toString(), "server.yml");
         if (!Files.exists(ymlPath)){
+            logger.error("Can't find server.yml,creating new file....");
             try {
                 Files.copy(Server.class.getClassLoader().getResourceAsStream("server.yml"),ymlPath);
             } catch (IOException e) {
                 e.printStackTrace();
+                logger.fatal("Can't create file,server will crash...");
+                this.stop(1);
             }
         }
         serverSets = new Yml(ymlPath);
-        System.out.println("server.yml loaded!");
+        logger.info("server.yml loaded!");
     }
 
     private void startTickScheduler(){
-        System.out.println("Starting TickScheduler...");
-        cookieServer.tickScheduler = new Thread(new ServerTicker());
-        cookieServer.tickScheduler.start();
-        System.out.println("TickScheduler Started!");
+        logger.info("Starting TickScheduler...");
+        this.tickScheduler = new Thread(new ServerTicker());
+        this.tickScheduler.start();
+        logger.info("TickScheduler Started!");
     }
 
     private void setHandlers(){
-        cookieServer.BedrockServer.setHandler(new SimpleBedrockServerEventHandler());
+        this.BedrockServer.setHandler(new CookieServerEventHandler());
     }
 
     private void initServerInfo(){
-        cookieServer.bindAddress = new InetSocketAddress(serverSets.<String>get("ip"), serverSets.<Integer>get("port"));
-        cookieServer.BedrockServer = new BedrockServer(cookieServer.bindAddress);
-        cookieServer.pong.setMotd(serverSets.get("motd"));
-        cookieServer.pong.setMaximumPlayerCount(serverSets.get("maxplayercount"));
-        cookieServer.pong.setGameType(serverSets.get("gamemode"));
-        cookieServer.pong.setEdition("MCPE");
-        cookieServer.pong.setPlayerCount(0);
-        cookieServer.pong.setProtocolVersion(Bedrock_v422.V422_CODEC.getProtocolVersion());
+        this.bindAddress = new InetSocketAddress(serverSets.<String>get("ip"), serverSets.<Integer>get("port"));
+        this.BedrockServer = new BedrockServer(this.bindAddress);
+        this.pong.setMotd(serverSets.get("motd"));
+        this.pong.setMaximumPlayerCount(serverSets.get("maxplayercount"));
+        this.pong.setGameType(serverSets.get("gamemode"));
+        this.pong.setEdition("MCPE");
+        this.pong.setPlayerCount(0);
+        this.pong.setProtocolVersion(Bedrock_v422.V422_CODEC.getProtocolVersion());
+        this.serverTick = serverSets.get("servertick");
+    }
+
+    public void stop(int status){
+        if (status == 0){
+            logger.info("Server is closed");
+            System.exit(0);
+        }else{
+            logger.fatal("Server is crashed");
+            System.exit(1);
+        }
     }
 }

@@ -1,4 +1,6 @@
 package top.cookie.event.potion;
 
-public class PotionEvent {
+import top.cookie.event.Event;
+
+public class PotionEvent extends Event {
 }

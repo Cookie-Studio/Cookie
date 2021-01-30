@@ -1,4 +1,6 @@
 package top.cookie.event.plugin;
 
-public class PluginEvent {
+import top.cookie.event.Event;
+
+public class PluginEvent extends Event {
 }

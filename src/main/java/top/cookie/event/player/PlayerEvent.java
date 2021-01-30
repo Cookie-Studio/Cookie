@@ -1,4 +1,6 @@
 package top.cookie.event.player;
 
-public class PlayerEvent {
+import top.cookie.event.Event;
+
+public class PlayerEvent extends Event {
 }

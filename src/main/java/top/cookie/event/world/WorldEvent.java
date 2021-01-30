@@ -1,4 +1,6 @@
 package top.cookie.event.world;
 
-public class WorldEvent {
+import top.cookie.event.Event;
+
+public class WorldEvent extends Event {
 }

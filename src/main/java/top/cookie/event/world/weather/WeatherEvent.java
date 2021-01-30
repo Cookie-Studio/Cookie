@@ -1,4 +1,6 @@
 package top.cookie.event.world.weather;
 
-public class WeatherEvent {
+import top.cookie.event.Event;
+
+public class WeatherEvent extends Event {
 }

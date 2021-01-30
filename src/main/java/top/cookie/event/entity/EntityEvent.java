@@ -1,4 +1,6 @@
 package top.cookie.event.entity;
 
-public class EntityEvent {
+import top.cookie.event.Event;
+
+public class EntityEvent extends Event {
 }

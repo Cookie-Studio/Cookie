@@ -1,4 +1,6 @@
 package top.cookie.event.block;
 
-public class BlockEvent {
+import top.cookie.event.Event;
+
+public class BlockEvent  extends Event {
 }

@@ -1,5 +1,9 @@
 package top.cookie.event;
 
 public interface Cancellable {
-    void cancel();
+    boolean isCancelled();
+
+    void setCancelled();
+
+    void setCancelled(boolean isCancel);
 }

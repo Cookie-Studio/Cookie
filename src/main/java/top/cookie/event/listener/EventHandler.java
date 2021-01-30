@@ -8,10 +8,18 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EventHandler {
-    /** Choose form 1 to 10 */
-    int priority() default 5;
-
-    /** If ignore canceled event */
-    boolean ignoreCancelled() default false;
+    int priority() default PriorityType.MEDIUM;
+    boolean IgnoreCanceled() default false;
 }
 
+interface PriorityType{
+    int LOWEST = 1;
+    int LOWER = 2;
+    int LOW = 3;
+    int MEDIUMLOW = 4;
+    int MEDIUM = 5;
+    int MEDIUMHIGH = 6;
+    int HIGH = 7;
+    int HIGHER = 8;
+    int HIGHEST = 9;
+}
