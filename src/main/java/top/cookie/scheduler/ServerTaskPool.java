@@ -2,7 +2,6 @@ package top.cookie.scheduler;
 
 import top.cookie.Server;
 import top.cookie.scheduler.tasks.ServerTask;
-
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -13,7 +12,7 @@ public class ServerTaskPool implements ServerThread{
     private class Scheduler implements Runnable{
         @Override
         public void run() {
-            while(mainThread.isInterrupted()) {
+            while(!mainThread.isInterrupted()) {
                 ServerTaskPool.this.taskPool.stream().parallel().forEach((task) -> {
                     task.run();
                     if (task.isCancel())

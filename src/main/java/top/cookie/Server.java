@@ -103,7 +103,6 @@ public class Server {
         }
     }
     private void loadServerYml(){
-        logger.info("Loading server.yml...");
         Path ymlPath = Paths.get(this.serverPath.toString(), "server.yml");
         if (!Files.exists(ymlPath)){
             logger.error("Can't find server.yml,creating new file....");
@@ -116,7 +115,6 @@ public class Server {
             }
         }
         serverSets = new Yml(ymlPath);
-        logger.info("server.yml loaded!");
     }
 
     private void setHandlers(){
