@@ -10,7 +10,7 @@ import java.net.InetSocketAddress;
 public class SimpleBedrockServerEventHandler implements BedrockServerEventHandler {
     @Override
     public boolean onConnectionRequest(InetSocketAddress inetSocketAddress) {
-        System.out.println(inetSocketAddress.getAddress().toString() + " connected");
+        Server.getInstance().getLogger().info(inetSocketAddress.getAddress().toString() + " connected");
         return true;
     }
 
@@ -22,7 +22,7 @@ public class SimpleBedrockServerEventHandler implements BedrockServerEventHandle
     @Override
     public void onSessionCreation(BedrockServerSession bedrockServerSession) {
         bedrockServerSession.addDisconnectHandler((reason) -> {
-            System.out.println(bedrockServerSession.getAddress() + " disconnect. Reason: " + reason.name());
+            Server.getInstance().getLogger().info(bedrockServerSession.getAddress() + " disconnect. Reason: " + reason.name());
         });
         bedrockServerSession.setPacketHandler(new SimpleBedrockPacketHandler(bedrockServerSession));
     }

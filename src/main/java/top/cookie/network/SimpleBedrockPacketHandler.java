@@ -213,10 +213,6 @@ public class SimpleBedrockPacketHandler implements BedrockPacketHandler {
 
     @Override
     public boolean handle(LoginPacket packet) {
-        if (packet.getProtocolVersion() != Server.getInstance().getServerProtocolVersion()){
-            this.session.disconnect(DisconnectReason.INCOMPATIBLE_PROTOCOL_VERSION.name());
-        }
-        System.out.println(this.session.getAddress() + " logined");
         System.out.println(packet);
         return true;
     }
@@ -397,10 +393,6 @@ public class SimpleBedrockPacketHandler implements BedrockPacketHandler {
 
     @Override
     public boolean handle(AddPlayerPacket packet) {
-        Player player = new Player(packet,this.session);
-        this.player = player;
-        Server.getInstance().getPlayers().put(packet.getUuid(),player);
-        System.out.println(this.player.getPlayerName() + " joined");
         System.out.println(packet);
         return true;
     }
