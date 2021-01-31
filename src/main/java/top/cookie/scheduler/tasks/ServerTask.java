@@ -27,4 +27,12 @@ public abstract class ServerTask {
     public void setCompletionTask(Runnable runnable){
         this.taskOnCompletion = runnable;
     }
+
+    public void setTask(Runnable task) {
+        this.task = task;
+    }
+
+    public Runnable getCompletionTask() {
+        return taskOnCompletion;
+    }
 }

@@ -10,7 +10,8 @@ import top.cookie.event.listener.ListenerManager;
 import top.cookie.network.CookieServerEventHandler;
 import top.cookie.scheduler.ServerTaskPool;
 import top.cookie.scheduler.ServerThread;
-import top.cookie.util.yml.Yml;
+import top.cookie.util.Config;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
@@ -32,9 +33,10 @@ public class Server {
     private ListenerManager listenerManager = new ListenerManager();
     private BedrockPacketCodec serverPacketCodec = Bedrock_v422.V422_CODEC;
     private static Server cookieServer;
-    private Yml serverSets;
+    private Config serverSets;
     private Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
-    private ArrayList<ServerThread> serverThreads = new ArrayList<ServerThread>();
+    private ServerTaskPool serverTaskPool;
+    private ArrayList<ServerThread> serverThreads = new ArrayList<>();
 
     public Path getServerPath() {
         return serverPath;
@@ -79,7 +81,7 @@ public class Server {
         return this.serverPacketCodec;
     }
 
-    public Yml getServerSets() {
+    public Config getServerSets() {
         return serverSets;
     }
 
@@ -114,23 +116,27 @@ public class Server {
                 this.stop(1);
             }
         }
-        serverSets = new Yml(ymlPath);
+        serverSets = new Config(ymlPath);
     }
 
     private void setHandlers(){
         this.BedrockServer.setHandler(new CookieServerEventHandler());
     }
 
+    public ServerTaskPool getServerTaskPool() {
+        return serverTaskPool;
+    }
+
     private void initServerInfo(){
-        this.bindAddress = new InetSocketAddress(serverSets.<String>get("ip"), serverSets.<Integer>get("port"));
+        this.bindAddress = new InetSocketAddress((String)serverSets.<String>get("ip"), (int)serverSets.<Integer>get("port"));
         this.BedrockServer = new BedrockServer(this.bindAddress);
-        this.pong.setMotd(serverSets.get("motd"));
-        this.pong.setMaximumPlayerCount(serverSets.get("maxplayercount"));
-        this.pong.setGameType(serverSets.get("gamemode"));
+        this.pong.setMotd((String)serverSets.get("motd"));
+        this.pong.setMaximumPlayerCount((int)serverSets.get("maxplayercount"));
+        this.pong.setGameType((String)serverSets.get("gamemode"));
         this.pong.setEdition("MCPE");
         this.pong.setPlayerCount(0);
         this.pong.setProtocolVersion(Bedrock_v422.V422_CODEC.getProtocolVersion());
-        this.serverTick = serverSets.get("servertick");
+        this.serverTick = (int)serverSets.get("servertick");
     }
 
     private void closeServerThreads(){
@@ -138,6 +144,7 @@ public class Server {
     }
 
     private void initServerThreads(){
-        this.serverThreads.add(new ServerTaskPool());
+        this.serverTaskPool = new ServerTaskPool();
+        this.serverThreads.add(this.serverTaskPool);
     }
 }

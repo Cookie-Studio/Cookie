@@ -35,4 +35,8 @@ public class ServerTaskPool implements ServerThread{
     public void close(){
         this.mainThread.interrupt();
     }
+
+    public void registerTask(ServerTask task){
+        this.taskPool.add(task);
+    }
 }
