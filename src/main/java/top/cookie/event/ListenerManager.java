@@ -1,14 +1,13 @@
 package top.cookie.event;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Listeners {
-    private static final Map<Integer,ArrayList<ListenerMethod>> methodMap = new HashMap<>();
-    static{
+public class ListenerManager {
+    private final Map<Integer,ArrayList<ListenerMethod>> methodMap = new HashMap<>();
+    public ListenerManager(){
         methodMap.put(PriorityType.LOWEST,new ArrayList<>());
         methodMap.put(PriorityType.LOWER,new ArrayList<>());
         methodMap.put(PriorityType.LOW,new ArrayList<>());
@@ -20,11 +19,11 @@ public class Listeners {
         methodMap.put(PriorityType.HIGHEST,new ArrayList<>());
     }
 
-    public static Map<Integer, ArrayList<ListenerMethod>> getMethodMap() {
+    public Map<Integer, ArrayList<ListenerMethod>> getMethodMap() {
         return methodMap;
     }
 
-    public static void registerListener(Class<Listener> listener){
+    public void registerListener(Class<Listener> listener){
         for(Method method : listener.getMethods()){
             if (!method.isAnnotationPresent(EventHandler.class)){
                 continue;
@@ -32,31 +31,27 @@ public class Listeners {
             getMethodMap().get(method.getAnnotation(EventHandler.class).priority()).add(new ListenerMethod(method));
         }
     }
-    public static void callAllListener(Event event){
+    public void callAllListener(Event event){
         for (int i = PriorityType.LOWEST;i<= PriorityType.HIGHEST;i++){
             for (ListenerMethod lm : getMethodMap().get(i)){
                 if (!event.isCancelled())
                     if (lm.isMatchEvent(event))
                         try {
                             lm.getMethod().invoke(event);
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        } catch (InvocationTargetException e) {
-                            e.printStackTrace();
+                        } catch (Exception e) {
+                            new EventException(e).printStackTrace();
                         }
                 else
                     if (lm.isMatchEvent(event) && lm.isIgnoreCanceled())
                         try {
                             lm.getMethod().invoke(event);
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        } catch (InvocationTargetException e) {
-                            e.printStackTrace();
+                        } catch (Exception e) {
+                            new EventException(e).printStackTrace();
                         }
             }
         }
     }
-    private static class ListenerMethod{
+    private class ListenerMethod{
         public int priority;
         public boolean isIgnoreCanceled;
         public Method method;

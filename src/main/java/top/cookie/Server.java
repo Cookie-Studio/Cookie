@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import top.cookie.event.listener.ListenerManager;
 import top.cookie.network.CookieServerEventHandler;
 import top.cookie.scheduler.ServerTaskPool;
+import top.cookie.scheduler.ServerThread;
 import top.cookie.util.yml.Yml;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -28,12 +29,16 @@ public class Server {
     private BedrockPong pong = new BedrockPong();
     private int serverTick = 20;
     private Map<UUID,Player> players = new HashMap<>();
-    private ServerTaskPool serverTaskPool;
+    private final ListenerManager listenerManager = new ListenerManager();
     private final BedrockPacketCodec serverPacketCodec = Bedrock_v422.V422_CODEC;
     private static Server cookieServer;
     private Yml serverSets;
-    private ListenerManager listenerManager = new ListenerManager();
     private Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
+    private ArrayList<ServerThread> serverThreads = new ArrayList<ServerThread>();
+
+    public Path getServerPath() {
+        return serverPath;
+    }
 
     private Server(){
         logger.info("Server starting...");
@@ -41,7 +46,7 @@ public class Server {
         this.loadServerYml();
         this.initServerInfo();
         this.setHandlers();
-        this.serverTaskPool = new ServerTaskPool();
+        this.initServerThreads();
         this.BedrockServer.bind().join();
         logger.info("Server started!");
     }
@@ -86,6 +91,17 @@ public class Server {
         return logger;
     }
 
+    public void stop(int status){
+        if (status == 0){
+            closeServerThreads();
+            logger.info("Server is closed");
+            System.exit(0);
+        }else{
+            closeServerThreads();
+            logger.fatal("Server is crashed");
+            System.exit(1);
+        }
+    }
     private void loadServerYml(){
         logger.info("Loading server.yml...");
         Path ymlPath = Paths.get(this.serverPath.toString(), "server.yml");
@@ -119,13 +135,11 @@ public class Server {
         this.serverTick = serverSets.get("servertick");
     }
 
-    public void stop(int status){
-        if (status == 0){
-            logger.info("Server is closed");
-            System.exit(0);
-        }else{
-            logger.fatal("Server is crashed");
-            System.exit(1);
-        }
+    private void closeServerThreads(){
+        this.serverThreads.stream().forEach((a) -> a.close());
+    }
+
+    private void initServerThreads(){
+        this.serverThreads.add(new ServerTaskPool());
     }
 }
