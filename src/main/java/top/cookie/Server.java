@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.cookie.event.listener.ListenerManager;
 import top.cookie.network.CookieServerEventHandler;
-import top.cookie.scheduler.servertick.ServerTicker;
+import top.cookie.scheduler.ServerTaskPool;
 import top.cookie.util.yml.Yml;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -28,7 +28,7 @@ public class Server {
     private BedrockPong pong = new BedrockPong();
     private int serverTick = 20;
     private Map<UUID,Player> players = new HashMap<>();
-    private Thread tickScheduler;
+    private ServerTaskPool serverTaskPool;
     private final BedrockPacketCodec serverPacketCodec = Bedrock_v422.V422_CODEC;
     private static Server cookieServer;
     private Yml serverSets;
@@ -41,7 +41,7 @@ public class Server {
         this.loadServerYml();
         this.initServerInfo();
         this.setHandlers();
-        this.startTickScheduler();
+        this.serverTaskPool = new ServerTaskPool();
         this.BedrockServer.bind().join();
         logger.info("Server started!");
     }
@@ -101,13 +101,6 @@ public class Server {
         }
         serverSets = new Yml(ymlPath);
         logger.info("server.yml loaded!");
-    }
-
-    private void startTickScheduler(){
-        logger.info("Starting TickScheduler...");
-        this.tickScheduler = new Thread(new ServerTicker());
-        this.tickScheduler.start();
-        logger.info("TickScheduler Started!");
     }
 
     private void setHandlers(){
