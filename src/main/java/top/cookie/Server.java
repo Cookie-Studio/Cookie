@@ -29,8 +29,8 @@ public class Server {
     private BedrockPong pong = new BedrockPong();
     private int serverTick = 20;
     private Map<UUID,Player> players = new HashMap<>();
-    private final ListenerManager listenerManager = new ListenerManager();
-    private final BedrockPacketCodec serverPacketCodec = Bedrock_v422.V422_CODEC;
+    private ListenerManager listenerManager = new ListenerManager();
+    private BedrockPacketCodec serverPacketCodec = Bedrock_v422.V422_CODEC;
     private static Server cookieServer;
     private Yml serverSets;
     private Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
