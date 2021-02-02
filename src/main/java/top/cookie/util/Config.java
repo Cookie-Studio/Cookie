@@ -8,7 +8,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import org.apache.logging.log4j.Level;
 import top.cookie.Server;
 import top.cookie.scheduler.tasks.DelayTask;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +30,6 @@ public class Config {
     public static final int YAML = 2; // .yml, .yaml
     public static final int ENUM = 5; // .txt, .list, .enum
     public static final int ENUMERATION = Config.ENUM;
-
     private static final JsonMapper JSON_MAPPER = new JsonMapper();
     private static final YAMLMapper YAML_MAPPER = new YAMLMapper();
     private static final JavaPropsMapper JAVA_PROPS_MAPPER = new JavaPropsMapper();
@@ -117,7 +115,6 @@ public class Config {
     public void reload() {
         this.config.clear();
         this.correct = false;
-        //this.load(this.file.toString());
         if (this.file == null) throw new IllegalStateException("Failed to reload Config. File object is undefined.");
         this.load(this.file.toString(), this.type);
 
@@ -253,12 +250,12 @@ public class Config {
                 }
             }
             if (async) {
-                Server.getInstance().getServerTaskPool().registerTask(new DelayTask(() -> {
+                Server.getInstance().registerTask(new DelayTask(() -> {
                 try {
                     Utils.writeFile(file, content);
                 } catch (IOException e) {
                     Server.getInstance().getLogger().throwing(Level.ERROR, e);
-                }},0));
+                }},0),true);
             } else {
                 try {
                     Utils.writeFile(this.file, content);

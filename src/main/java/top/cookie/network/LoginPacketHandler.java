@@ -8,7 +8,6 @@ import com.nukkitx.protocol.bedrock.packet.PlayStatusPacket;
 import top.cookie.Server;
 import top.cookie.event.player.PlayerPreLoginEvent;
 import top.cookie.util.ClientChainData;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,7 +40,7 @@ public class LoginPacketHandler implements BedrockPacketHandler {
 
         ClientChainData clientChainData = ClientChainData.read(packet);
 
-        if (!clientChainData.isXboxAuthed() && Server.getInstance().getServerSets().<Boolean>get("xbox-auth")){
+        if (!clientChainData.isXboxAuthed() && (boolean)Server.getInstance().getServerSets().get("xbox-auth")){
             session.disconnect("disconnectionScreen.notAuthenticated");
             return true;
         }//check xbox
