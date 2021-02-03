@@ -250,7 +250,7 @@ public class Config {
                 }
             }
             if (async) {
-                Server.getInstance().registerTask(new DelayTask(() -> {
+                Server.getInstance().getScheduler().registerTask(new DelayTask(() -> {
                 try {
                     Utils.writeFile(file, content);
                 } catch (IOException e) {

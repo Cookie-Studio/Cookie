@@ -8,6 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.cookie.event.listener.ListenerManager;
 import top.cookie.network.CookieServerEventHandler;
+import top.cookie.scheduler.Scheduler;
+import top.cookie.scheduler.tasks.PeriodTask;
 import top.cookie.scheduler.tasks.ServerTask;
 import top.cookie.scheduler.timer.Timer;
 import top.cookie.util.Config;
@@ -35,50 +37,16 @@ public class Server {
     private static Server cookieServer;
     private Config serverSets;
     private Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
-    private Thread mainThread;
-    private Thread asyncThread;
-    private Timer timer = new Timer(serverTick);
-    private CopyOnWriteArrayList<ServerTask> mainThreadTasks = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<ServerTask> asyncTasks = new CopyOnWriteArrayList<>();
-    private int serverTPS = 20;
-
-    private class MainThreadRunnable implements Runnable{
-        @Override
-        public void run() {
-            long latestTick = 0;
-            while(!mainThread.isInterrupted()){
-                long l2 = timer.getRunTicks();
-                if (latestTick != l2) {
-                    for (ServerTask task : Server.this.mainThreadTasks) {
-                        task.run();
-                        if (task.isCancel())
-                            Server.this.mainThreadTasks.remove(task);
-                    }
-                    if ((l2 - latestTick) > 1){
-                        serverTPS = 20 - ((int)(l2 - latestTick) - 1);
-                    }
-                    latestTick = l2;
-                }
-            }
-        }
-    }
-
-    private class AsyncTaskRunnable implements Runnable{
-        @Override
-        public void run() {
-            long latestTick = 0;
-            while(!mainThread.isInterrupted()){
-                long l2 = timer.getRunTicks();
-                if (latestTick != l2) {
-                    Server.this.asyncTasks.stream().parallel().forEach((t) -> { t.run();
-                    if (t.isCancel())Server.this.asyncTasks.remove(t);});
-                }
-            }
-        }
-    }
+    private Scheduler scheduler;
 
     public static void main(String[] args) {
         Server.initServer();
+        Server.getInstance().getScheduler().registerTask(new PeriodTask(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("this's a period task!");
+            }
+        },1),true);
     }
 
     public Path getServerPath() {
@@ -89,22 +57,15 @@ public class Server {
         Server.cookieServer = new Server();
     }
 
-    public Timer getTimer() {
-        return timer;
-    }
-
     private Server(){
         logger.info("Server starting...");
-        Server.cookieServer = this;
+        Server.cookieServer = this;//avoid null
         this.loadServerYml();
         this.initServerInfo();
         this.setHandlers();
-        this.timer.startTiming();
-        this.mainThread = new Thread(new MainThreadRunnable());
-        this.mainThread.start();
-        this.asyncThread = new Thread(new AsyncTaskRunnable());
-        this.asyncThread.start();
         this.BedrockServer.bind().join();
+        this.scheduler = new Scheduler();
+        this.scheduler.start();
         logger.info("Server started!");
     }
 
@@ -144,6 +105,10 @@ public class Server {
         return logger;
     }
 
+    public Scheduler getScheduler() {
+        return scheduler;
+    }
+
     public void stop(int status){
         if (status == 0){
             logger.info("Server is closed");
@@ -152,25 +117,6 @@ public class Server {
             logger.fatal("Server is crashed");
             System.exit(1);
         }
-    }
-
-    public void registerTask(ServerTask task){
-        this.registerTask(task,false);
-    }
-
-    public void registerTask(ServerTask task,boolean async){
-        if (async)
-            this.asyncTasks.add(task);
-        else if(!async)
-            this.mainThreadTasks.add(task);
-    }
-
-    public CopyOnWriteArrayList<ServerTask> getMainThreadTask() {
-        return mainThreadTasks;
-    }
-
-    public CopyOnWriteArrayList<ServerTask> getAsyncTask() {
-        return asyncTasks;
     }
 
     private void loadServerYml(){

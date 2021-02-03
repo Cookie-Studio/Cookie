@@ -35,11 +35,11 @@ public class Timer{
         return runTicks;
     }
 
-    public void setCancel(){
+    public void close(){
         this.thread.interrupt();
     }
 
-    public boolean isCancel(){
+    public boolean isClosed(){
         return this.thread.isInterrupted();
     }
 
