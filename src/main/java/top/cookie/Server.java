@@ -41,12 +41,6 @@ public class Server {
 
     public static void main(String[] args) {
         Server.initServer();
-        Server.getInstance().getScheduler().registerTask(new PeriodTask(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("this's a period task!");
-            }
-        },1),true);
     }
 
     public Path getServerPath() {
