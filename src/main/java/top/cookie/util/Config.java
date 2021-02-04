@@ -30,15 +30,13 @@ public class Config {
     public static final int YAML = 2; // .yml, .yaml
     public static final int ENUM = 5; // .txt, .list, .enum
     public static final int ENUMERATION = Config.ENUM;
-    private static final JsonMapper JSON_MAPPER = new JsonMapper();
-    private static final YAMLMapper YAML_MAPPER = new YAMLMapper();
     private static final JavaPropsMapper JAVA_PROPS_MAPPER = new JavaPropsMapper();
 
     static {
         SimpleModule module = new SimpleModule();
         module.addAbstractTypeMapping(Map.class, ConfigSection.class);
-        JSON_MAPPER.registerModule(module);
-        YAML_MAPPER.registerModule(module);
+        Server.getJsonMapper().registerModule(module);
+        Server.getYamlMapper().registerModule(module);
         JAVA_PROPS_MAPPER.registerModule(module);
     }
 
@@ -235,10 +233,10 @@ public class Config {
                         mapper = JAVA_PROPS_MAPPER;
                         break;
                     case JSON:
-                        mapper = JSON_MAPPER;
+                        mapper = Server.getJsonMapper();
                         break;
                     case YAML:
-                        mapper = YAML_MAPPER;
+                        mapper = Server.getYamlMapper();
                         break;
                     default:
                         throw new UnsupportedOperationException("Invalid config type " + type);
@@ -528,10 +526,10 @@ public class Config {
                     mapper = JAVA_PROPS_MAPPER;
                     break;
                 case Config.JSON:
-                    mapper = JSON_MAPPER;
+                    mapper = Server.getJsonMapper();
                     break;
                 case Config.YAML:
-                    mapper = YAML_MAPPER;
+                    mapper = Server.getYamlMapper();
                     break;
                 default:
                     this.correct = false;

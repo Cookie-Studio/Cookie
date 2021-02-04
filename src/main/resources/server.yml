@@ -7,3 +7,4 @@ motd: Cookie server
 gamemode: survive
 maxplayercount: 20
 xbox-auth: true
+force-resources: true

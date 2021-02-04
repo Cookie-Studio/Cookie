@@ -1,12 +1,13 @@
-package top.cookie.network;
+package top.cookie.network.packethandler;
 
 import com.nukkitx.protocol.bedrock.BedrockPacketCodec;
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
 import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler;
 import com.nukkitx.protocol.bedrock.packet.LoginPacket;
 import com.nukkitx.protocol.bedrock.packet.PlayStatusPacket;
+import top.cookie.Player;
 import top.cookie.Server;
-import top.cookie.event.player.PlayerPreLoginEvent;
+import top.cookie.network.LoginData;
 import top.cookie.util.ClientChainData;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,17 +59,16 @@ public class LoginPacketHandler implements BedrockPacketHandler {
             return true;
         }//check skin
 
-        PlayerPreLoginEvent event = new PlayerPreLoginEvent(clientChainData,this.session);
-        Server.getInstance().getListenerManager().callAllListener(event);
-
-        if (event.isCancelled()){//if cancelled
-            this.session.disconnect("plugin reason");
-        }
-
         PlayStatusPacket statusPacket = new PlayStatusPacket();
         statusPacket.setStatus(PlayStatusPacket.Status.LOGIN_SUCCESS);
         session.sendPacket(statusPacket);//successed login
 
+        LoginData loginData = new LoginData(clientChainData,session);
+        Server.getInstance().addPlayer(session,new Player(loginData));
+
+        session.setPacketHandler(new ResourcePackPacketHandler(loginData));
+
+        session.sendPacket(Server.getInstance().getPackManager().getPacksInfos());
         return true;
     }
 }

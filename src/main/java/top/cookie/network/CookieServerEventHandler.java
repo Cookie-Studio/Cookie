@@ -4,6 +4,8 @@ import com.nukkitx.protocol.bedrock.BedrockPong;
 import com.nukkitx.protocol.bedrock.BedrockServerEventHandler;
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
 import top.cookie.Server;
+import top.cookie.network.packethandler.LoginPacketHandler;
+
 import java.net.InetSocketAddress;
 
 public class CookieServerEventHandler implements BedrockServerEventHandler {
@@ -22,6 +24,7 @@ public class CookieServerEventHandler implements BedrockServerEventHandler {
     public void onSessionCreation(BedrockServerSession bedrockServerSession) {
         bedrockServerSession.addDisconnectHandler((reason) -> {
             Server.getInstance().getLogger().info(bedrockServerSession.getAddress() + " disconnect. Reason: " + reason.name());
+            Server.getInstance().removePlayer(bedrockServerSession);
         });
         bedrockServerSession.setPacketHandler(new LoginPacketHandler(bedrockServerSession));
     }
