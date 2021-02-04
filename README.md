@@ -4,7 +4,7 @@
 About Cookie
 ----
 
-Cookie is a high-performance server of MCBE, written in Java, supports all features, and supports loading plug-ins. Cookie has a complete and easy-to-use plug-in api, which generally draws on the architecture of nk, and has made a lot of changes on this basis. This project is still under development. We welcome capable developers to join our development team (currently almost all of them are developed by me). We hope that through this project, we can revive the domestic bedrock version of the ecosystem.
+Cookie is written in Java, based on Cloudburst core, and on this basis, MCBE high-performance core with many changes, supporting all original features. Cookie has a complete and easy-to-use plug-in API. The project is still under development. We welcome capable developers to join our development team (currently almost all developers are developed by me). I hope that through this project, help the domestic bedrock version of the ecosystem
 
 Design goals
 ---
