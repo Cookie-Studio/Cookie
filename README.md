@@ -1,5 +1,5 @@
 ![Cookie](.github/images/cookie-logo.png)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL_v3-blue.svg)](LICENSE)
 
 About Cookie
 ----
