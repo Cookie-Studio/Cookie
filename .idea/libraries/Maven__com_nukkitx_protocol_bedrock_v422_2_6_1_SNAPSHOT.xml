@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.nukkitx.protocol:bedrock-v422:2.6.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/nukkitx/protocol/bedrock-v422/2.6.1-SNAPSHOT/bedrock-v422-2.6.1-20210107.192639-9.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/nukkitx/protocol/bedrock-v422/2.6.1-SNAPSHOT/bedrock-v422-2.6.1-20210107.192639-9-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/nukkitx/protocol/bedrock-v422/2.6.1-SNAPSHOT/bedrock-v422-2.6.1-20210107.192639-9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.nukkitx.protocol:common:2.6.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/nukkitx/protocol/common/2.6.1-SNAPSHOT/common-2.6.1-20210107.192542-10.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/nukkitx/protocol/common/2.6.1-SNAPSHOT/common-2.6.1-20210107.192542-10-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/nukkitx/protocol/common/2.6.1-SNAPSHOT/common-2.6.1-20210107.192542-10-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
