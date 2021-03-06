@@ -23,12 +23,12 @@ public class ListenerManager {
         return methodMap;
     }
 
-    public void registerListener(Class<? extends Listener> listener){
-        for(Method method : listener.getMethods()){
+    public void registerListener(Listener listener){
+        for(Method method : listener.getClass().getMethods()){
             if (!method.isAnnotationPresent(EventHandler.class)){
                 continue;
             }
-            getMethodMap().get(method.getAnnotation(EventHandler.class).priority()).add(new ListenerMethod(method));
+            getMethodMap().get(method.getAnnotation(EventHandler.class).priority()).add(new ListenerMethod(method,listener));
         }
     }
     public void callAllListener(Event event){
@@ -55,6 +55,7 @@ public class ListenerManager {
         public int priority;
         public boolean isIgnoreCanceled;
         public Method method;
+        public Listener instance;
 
         public int getPriority() {
             return priority;
@@ -68,11 +69,12 @@ public class ListenerManager {
             return method;
         }
 
-        public ListenerMethod(Method method){
+        public ListenerMethod(Method method,Listener instance){
             EventHandler annotation = method.getAnnotation(EventHandler.class);
             this.method = method;
             this.isIgnoreCanceled = annotation.IgnoreCanceled();
             this.priority = annotation.priority();
+            this.instance = instance;
         }
         public boolean isMatchEvent(Event event){
             return this.method.getParameterTypes()[0] == event.getClass();
