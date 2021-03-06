@@ -69,7 +69,11 @@ public class ListenerManager {
             return method;
         }
 
-        public ListenerMethod(Method method,Listener instance){
+        public Listener getInstance() {
+            return instance;
+        }
+
+        public ListenerMethod(Method method, Listener instance){
             EventHandler annotation = method.getAnnotation(EventHandler.class);
             this.method = method;
             this.isIgnoreCanceled = annotation.IgnoreCanceled();
