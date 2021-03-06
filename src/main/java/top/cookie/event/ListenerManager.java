@@ -23,7 +23,7 @@ public class ListenerManager {
         return methodMap;
     }
 
-    public void registerListener(Class<Listener> listener){
+    public void registerListener(Class<? extends Listener> listener){
         for(Method method : listener.getMethods()){
             if (!method.isAnnotationPresent(EventHandler.class)){
                 continue;
@@ -37,14 +37,14 @@ public class ListenerManager {
                 if (!event.isCancelled())
                     if (lm.isMatchEvent(event))
                         try {
-                            lm.getMethod().invoke(event);
+                            lm.getMethod().invoke(this,event);
                         } catch (Exception e) {
                             new EventException(e).printStackTrace();
                         }
                 else
                     if (lm.isMatchEvent(event) && lm.isIgnoreCanceled())
                         try {
-                            lm.getMethod().invoke(event);
+                            lm.getMethod().invoke(this,event);
                         } catch (Exception e) {
                             new EventException(e).printStackTrace();
                         }

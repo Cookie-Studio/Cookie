@@ -1,13 +1,10 @@
 package top.cookie.event;
 
 public class Event {
-    private boolean isCancelled = false;
+    private boolean cancelled = false;
 
     public boolean isCancelled() {
-        if (!(this instanceof Cancellable)) {
-            throw new EventException("Event is not Cancellable");
-        }
-        return isCancelled;
+        return cancelled;
     }
 
     public void setCancelled() {
@@ -18,6 +15,6 @@ public class Event {
         if (!(this instanceof Cancellable)) {
             throw new EventException("Event is not Cancellable");
         }
-        isCancelled = value;
+        cancelled = value;
     }
 }
