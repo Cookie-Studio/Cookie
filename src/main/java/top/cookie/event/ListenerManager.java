@@ -37,14 +37,14 @@ public class ListenerManager {
                 if (!event.isCancelled())
                     if (lm.isMatchEvent(event))
                         try {
-                            lm.getMethod().invoke(this,event);
+                            lm.getMethod().invoke(lm.getInstance(),event);
                         } catch (Exception e) {
                             new EventException(e).printStackTrace();
                         }
                 else
                     if (lm.isMatchEvent(event) && lm.isIgnoreCanceled())
                         try {
-                            lm.getMethod().invoke(this,event);
+                            lm.getMethod().invoke(lm.getInstance(),event);
                         } catch (Exception e) {
                             new EventException(e).printStackTrace();
                         }
